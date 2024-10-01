@@ -1,4 +1,5 @@
 export interface Config {
     Name: any,
-    Keys: any[]
+    Keys: any[],
+    Postfix?: string
 }

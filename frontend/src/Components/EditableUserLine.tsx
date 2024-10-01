@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import { Keys, UserModel } from "../Misc/UserModel";
 import { excludeProps } from "./UserList";
 import { useForm } from "react-hook-form";
@@ -37,25 +37,28 @@ export function EditableUserLine({ UserData, onDelete, onSave }
         return <td key={fieldKey}>
             <input key={fieldKey} name={name} type={props[fieldKey]?.type} defaultValue={value} placeholder={fieldKey}
                 onChange={(e) => { onChange(e); setChanged(true); }} ref={ref} />
-
-            {props[fieldKey]?.postfix && <span>{' ' + props[fieldKey].postfix}</span>}
             {errors[fieldKey] && <p>{errors[fieldKey]?.message}</p>}
         </td>
     });
 
     function onSubmit(data: UserModel) {
-        let minimizedData: any = {
-            id: UserData.id
-        };
+        if (data.id != freshUserId) {
+            let minimizedData: any = {
+                id: UserData.id
+            };
 
-        Keys(UserData).map(x => {
-            if (UserData[x] !== data[x])
-                minimizedData[x] = data[x];
-        });
+            Keys(UserData).map(x => {
+                if (UserData[x] !== data[x])
+                    minimizedData[x] = data[x];
+            });
 
-        onSave(minimizedData);
+            onSave(minimizedData);
+        }
+        else{
+            onSave(data);
+        }
+
         setChanged(false);
-        console.log(minimizedData);
     }
 
     function onInvalid(data: any) {
@@ -105,8 +108,7 @@ const props: { [id: string]: any; } = {
                 message: 'Age must be at most 100',
             },
             valueAsNumber: true
-        },
-        postfix: 'years'
+        }
     },
     sex: {
         type: 'select',

@@ -82,10 +82,9 @@ namespace chat_backend.Controllers
         public async Task<IActionResult> DeleteUserAsync([FromQuery(Name = "userId")][Required] string userIds)
         {
             if (string.IsNullOrWhiteSpace(userIds))
-                return;
+                return BadRequest("Empty request");
 
             var ids = userIds.Split(',');
-
             var users = new List<User>();
 
             foreach (var id in ids)

@@ -36,7 +36,7 @@ tr:nth-child(odd) td {
 }
 
 tr:nth-child(even) td {
-  --even-color: rgba(46, 84, 255, 0.658);
+  --even-color: rgba(143, 163, 255, 0.733);
   background-color: var(--even-color);
 }
 
@@ -114,4 +114,8 @@ td p {
 
 tr td.buttons-column{
   background-color: antiquewhite;
+}
+
+span{
+  font-weight: bold;
 }

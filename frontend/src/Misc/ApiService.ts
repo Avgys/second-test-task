@@ -1,15 +1,4 @@
 export class ApiService {
-  // public static async Register(credentials: Credentials): Promise<RegisterResponse>{
-  //     const responseSalt =  await this.GET(URLConsts.BACKEND_SALT_API);
-  //     const passwordHash = HashPassword(credentials.password, responseSalt.salt);
-  //     const payload : CredentialsModel = {
-  //         Name: credentials.login,
-  //         ClientPasswordHash: passwordHash,
-  //         ClientSalt: responseSalt.salt
-  //     };
-  //     return await ApiService.POST(URLConsts.BACKEND_REGISTER_API, payload);
-  // }
-
   public static async DELETE(url: string) {
     return await this.SendRequest(() => fetch(url, {
       method: 'DELETE'
