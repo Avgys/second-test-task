@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace chat_backend
 {
-    public class UserModel
+    public class UserModel 
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
 
-        [Range(0, 200)]
+        [Range(18, 100)]
         public byte? Age { get; set; }
         public string? Sex { get; set; }
 
@@ -27,7 +27,7 @@ namespace chat_backend
             return new User {
                 FirstName = FirstName,
                 LastName = LastName,
-                Age = Age ?? 0,
+                Age = Age ?? 18,
                 Sex = Sex?.GetEnum() ?? Persistence.Models.Sex.Non,
             };
         }

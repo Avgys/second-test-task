@@ -26,9 +26,14 @@ namespace chat_backend
 
                 builder.Services.AddPersistence(builder.Configuration);
 
-                builder.Services.AddAuthorization(options =>
+
+                builder.Services.AddCors(options =>
                 {
-                    options.AddPolicy(Auth.UserPolicy, policy => policy.RequireClaim("Role", "User"));
+                    options.AddPolicy("AllowReactApp",
+                    builder => builder
+                       .WithOrigins("http://localhost:3000")
+                       .AllowAnyHeader()
+                       .AllowAnyMethod());
                 });
 
                 var app = builder.Build();
@@ -40,7 +45,7 @@ namespace chat_backend
                 }
 
                 app.UseHttpsRedirection();
-
+                app.UseCors("AllowReactApp");
                 app.MapControllers();
 
                 app.Run();

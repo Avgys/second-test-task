@@ -1,12 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import UsersList from './Components/UserList';
+import LoremIpsum from 'react-lorem-ipsum';
 
 function App() {
   return (
     <div className="App">
-        <UsersList/>
+      <LoremIpsum p={2} />
+      <UsersList height='400px' />
+      <LoremIpsum p={2} />
     </div>
   );
 }

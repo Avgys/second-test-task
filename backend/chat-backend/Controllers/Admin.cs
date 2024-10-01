@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using chat_backend.Validation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NLog.Web.LayoutRenderers;
 using Persistence;
 using Persistence.Models;
 using System.ComponentModel.DataAnnotations;
@@ -33,7 +33,7 @@ namespace chat_backend.Controllers
         [HttpPost("Users")]
         public async Task<IActionResult> AddUserAsync([FromBody] UserModel newUser)
         {
-            if (!ModelState.IsValid)
+            if (!UserModelValidation.AddValid(newUser))
                 return BadRequest("No enough credentials");
 
             try
@@ -41,7 +41,7 @@ namespace chat_backend.Controllers
                 var userDb = newUser.ToDbUser();
                 await dbContext.Users.AddAsync(userDb);
                 await dbContext.SaveChangesAsync();
-                return Ok(userDb);
+                return Ok(new UserModelId(userDb));
             }
             catch (Exception ex)
             {
@@ -50,7 +50,7 @@ namespace chat_backend.Controllers
             }
         }
 
-        [HttpPut("Users")]
+        [HttpPatch("Users")]
         public async Task<IActionResult> UpdateUserAsync(UserModelId newUser)
         {
             if (!ModelState.IsValid)
@@ -79,16 +79,24 @@ namespace chat_backend.Controllers
         }
 
         [HttpDelete("Users")]
-        public async Task<IActionResult> DeleteUserAsync([Required] int UserId)
+        public async Task<IActionResult> DeleteUserAsync([FromQuery(Name = "userId")][Required] string userIds)
         {
+            if (string.IsNullOrWhiteSpace(userIds))
+                return;
+
+            var ids = userIds.Split(',');
+
+            var users = new List<User>();
+
+            foreach (var id in ids)
+            {
+                if (int.TryParse(id, out var value))
+                    users.Add(new User { Id = value });
+            }
+
             try
             {
-                var user = await dbContext.Users.SingleOrDefaultAsync(user => user.Id == UserId);
-
-                if (user == null)
-                    return NotFound("No such user");
-
-                dbContext.Users.Remove(user);
+                dbContext.RemoveRange(users);
                 await dbContext.SaveChangesAsync();
                 return Ok();
             }
